@@ -70,7 +70,7 @@ function intervalFunc()
 
 function getLoggedInUser()
 {
-  exec('for /f "tokens=2" %u in (\'query session ^| findstr /R "^console"\') do @echo %u',function (error, stdout, stderr) {
+  exec('for /f "tokens=2" %u in (\'query session ^| findstr /R "console"\') do @echo %u',function (error, stdout, stderr) {
       username = stdout.trim()
       if(!Number.isNaN(Number(username))) //if it's a number it's the empty ID
         client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username)
