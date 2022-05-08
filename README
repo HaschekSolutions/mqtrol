@@ -1,0 +1,5 @@
+# MQTrol
+
+Is a simple MQTT based agent/web interface solution for automating sysadmin stuff.
+
+You can manage all clients running the agent via web interface directly over MQTT

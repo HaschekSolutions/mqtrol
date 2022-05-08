@@ -16,10 +16,10 @@ const options = {
     reconnectPeriod: 1000,
     connectTimeout: 30 * 1000,
     will: {
-      topic: 'WillMsg/'+hostname,
-      payload: 'Gone bye bye',
-      qos: 0,
-      retain: false
+      topic: 'mqtrol/presence/'+hostname,
+      payload: 'off',
+      qos: 1,
+      retain: true
     },
     rejectUnauthorized: false
   }
@@ -28,11 +28,16 @@ const options = {
 const client  = mqtt.connect('mqtt://192.168.1.51',options)
 
 client.on('connect', function () {
-  client.subscribe('commands', function (err) {
+  client.subscribe('mqtrol/commands/all', function (err) {
     if (!err) {
-      client.publish('presence', 'Hello mqtt')
+      client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
+
+      //start interval
+      setInterval(intervalFunc, 30000);
     }
   })
+
+  client.subscribe('mqtrol/commands/'+hostname)
 })
 
 
@@ -44,12 +49,27 @@ client.on('message', function (topic, message) {
     switch(m)
     {
         case 'ping':
-            client.publish('results/'+hostname, "pong")
+            client.publish('mqtrol/results/'+hostname, "pong")
         break;
 
         default:
-            exec(m, (err, stdout, stderr) => client.publish('results/'+hostname, stdout) )
+            exec(m, (err, stdout, stderr) => client.publish('mqtrol/results/'+hostname, stdout) )
     }
     
   //client.end()
 })
+
+
+function intervalFunc()
+{
+  getLoggedInUser()
+}
+
+
+function getLoggedInUser()
+{
+  exec('for /f "tokens=2" %u in (\'query session ^| findstr /R "^>"\') do @echo %u',function (error, stdout, stderr) {
+      username = stdout.trim()
+      client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username)
+  });
+}
