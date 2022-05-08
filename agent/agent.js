@@ -1,6 +1,8 @@
 const mqtt = require('mqtt')
 const exec = require('child_process').exec
 var os = require("os");
+var fs = require('fs');
+const { exit } = require('process');
 var hostname = os.hostname();
 
 const clientId = hostname + '_' + Math.random().toString(16).substr(2, 8)
@@ -25,7 +27,7 @@ const options = {
   }
 
 
-const client  = mqtt.connect('mqtt://192.168.1.51',options)
+const client  = mqtt.connect(process.env.mqtrol_broker_url,options)
 
 client.on('connect', function () {
   client.subscribe('mqtrol/commands/all', function (err) {
