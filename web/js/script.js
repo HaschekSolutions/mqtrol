@@ -36,7 +36,6 @@ client.on('message', function (topic, message) {
     {
         var agent = topic.split('/')[2]
         var output = message.toString()
-        console.log(output,"is jason?",isJson(output))
         if(isJson(output))
         {
             var o = JSON.parse(output)
@@ -63,7 +62,6 @@ $( "#cmd_btn" ).on("click",function(e) {
 
     var cmd = $('#cmd_input').val()
     var sendto = Array.from($(".agentselectorclass:checked"), a => a.value);
-    console.log("sendto",sendto)
     if(sendto[0]=='all')
         client.publish('mqtrol/commands/all', cmd)
     else

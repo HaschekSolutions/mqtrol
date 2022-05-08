@@ -3,3 +3,18 @@
 Is a simple MQTT based agent/web interface solution for automating sysadmin stuff.
 
 You can manage all clients running the agent via web interface directly over MQTT
+
+# Installing the Agent
+
+1. Install NodeJS from https://nodejs.org/en/
+2. Go to the agent folder from a command prompt and run `npm install mqtt`
+3. Open the file `/agent/install-service.bat` so the NSSM dialogue will appear
+4. Use the following settings
+  - Application tab
+    - Path: Path to your node.exe
+    - Startup Directory: Full path to your agent folder (doesn't need the rest of the project folders, just `/agent`)
+    - Arguments: Full path to your agent.js file
+  - Details tab (just fill in some name and desciption)
+  - Log on
+    - Ideally you'd use the Administrator account here
+
