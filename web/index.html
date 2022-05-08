@@ -29,13 +29,21 @@
                 <input type="text" class="form-control" id="cmd_input" aria-describedby="commandHelp">
                 <div id="commandHelp" class="form-text">Command to execute</div>
             </div>
+
+            <div class="mb-3" id="agentselectorwrapper">
+                <div class="form-check form-check-inline">
+                    <input class="agentselectorclass form-check-input" name="agentscmd[]" type="checkbox" checked id="agentselector" value="all">
+                    <label class="form-check-label" for="agentselector">All</label>
+                </div>
+            </div>
+
             <button type="submit" id="cmd_btn" class="btn btn-primary">Submit</button>
         </form>
     </div>
 
-    <div class="container" >
+    <div class="container">
         <h2>Agents</h2>
-        <div id="agents" class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+        <div id="agents" class="row row-cols-1 row-cols-md-3 mb-3">
 
         </div>
     </div>

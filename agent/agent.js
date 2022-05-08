@@ -44,16 +44,17 @@ client.on('connect', function () {
 client.on('message', function (topic, message) {
 
     var m = message.toString()
+    if(m.length==0) return;
     console.log("topic => ",topic,"\tmessage => ",m)
 
     switch(m)
     {
         case 'ping':
-            client.publish('mqtrol/results/'+hostname, "pong")
+            client.publish('mqtrol/results/'+hostname, JSON.stringify({err:"", stdout:"pong", stderr:""}))
         break;
 
         default:
-            exec(m, (err, stdout, stderr) => client.publish('mqtrol/results/'+hostname, stdout) )
+            exec(m, (err, stdout, stderr) => client.publish('mqtrol/results/'+hostname, JSON.stringify({err:err, stdout:stdout, stderr:stderr}) ))
     }
     
   //client.end()

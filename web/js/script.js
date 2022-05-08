@@ -15,14 +15,20 @@ client.on('message', function (topic, message) {
         console.log("PRESENCE of "+agent,message.toString())
         if(!agents.includes(agent))
         {
+            // NEW ARRIVAL
             createNewBox(agent,online)
             agents.push(agent)
+
+            $("#agentselectorwrapper").append(`
+            <div class="form-check form-check-inline">
+                <input class="agentselectorclass customagentselector form-check-input" name="agentscmd[]" type="checkbox" id="agentselector-`+agent+`" value="`+agent+`">
+                <label class="form-check-label" for="agentselector-`+agent+`">`+agent+`</label>
+            </div>`)
         }
         else
         {
             $('#agent-'+agent).attr('status',online)
         }
-
         
     }
     
@@ -30,8 +36,21 @@ client.on('message', function (topic, message) {
     {
         var agent = topic.split('/')[2]
         var output = message.toString()
+        console.log(output,"is jason?",isJson(output))
+        if(isJson(output))
+        {
+            var o = JSON.parse(output)
+
+            $("#lastoutput_"+agent).text(o.stdout)
+            if(o.err)
+                $("#lastoutput_"+agent).append("Error\n")
+            if(o.stderr)
+                $("#lastoutput_"+agent).append(o.stderr)
+        }
+        else
+            $("#lastoutput_"+agent).text(output)
         //$("#commands_"+agent).append("<li>"+output+"</li>")
-        $("#lastoutput_"+agent).text(output)
+        
     }
   //client.end()
 })
@@ -43,10 +62,30 @@ client.on('message', function (topic, message) {
 $( "#cmd_btn" ).on("click",function(e) {
 
     var cmd = $('#cmd_input').val()
-    client.publish('mqtrol/commands/all', cmd)
-    //alert( "Handler for .click() called." );
+    var sendto = Array.from($(".agentselectorclass:checked"), a => a.value);
+    console.log("sendto",sendto)
+    if(sendto[0]=='all')
+        client.publish('mqtrol/commands/all', cmd)
+    else
+        for(var i=0;i<sendto.length;i++)
+            client.publish('mqtrol/commands/'+sendto[i], cmd)
 
     e.preventDefault();
+});
+
+$(document).on('change', 'input[type="checkbox"]', function() {
+    var agent = $(this).val()
+    var checked = $(this).is(':checked')
+    console.log("checkbox changed for "+agent)
+
+    if(agent=='all')
+    {
+        if(checked)
+            document.querySelectorAll('.customagentselector').forEach(c=> c.checked=0)
+    }
+    else
+        $("#agentselector").prop('checked', false)
+    
 });
 
 
@@ -60,10 +99,9 @@ function createNewBox(name,status)
           <h4 class="my-0 fw-normal">`+name+`</h4>
         </div>
         <div class="card-body">
-          <h3 class="card-title pricing-card-title">Output</h3>
           <ul id="commands_`+name+`" class="list-unstyled mt-3 mb-4"></ul>
 
-          <pre><code id="lastoutput_`+name+`"></code></pre>
+          <pre><code id="lastoutput_`+name+`"> -- noch kein output -- </code></pre>
 
 
           <!--<button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>--!>
