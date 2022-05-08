@@ -42,6 +42,12 @@ client.on('connect', function () {
 })
 
 
+client.on('error', err => {
+  console.error('MQTT broker error', err)
+  client.end()
+  client.reconnect()
+})
+
 client.on('message', function (topic, message) {
 
     var m = message.toString()
@@ -65,6 +71,7 @@ client.on('message', function (topic, message) {
 function intervalFunc()
 {
   getLoggedInUser()
+  client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
 }
 
 
@@ -72,7 +79,6 @@ function getLoggedInUser()
 {
   exec('for /f "tokens=2" %u in (\'query session ^| findstr /R "console"\') do @echo %u',function (error, stdout, stderr) {
       username = stdout.trim()
-      console.log(username,Number.isNaN(Number(username)));
       if(Number.isNaN(Number(username))) //if it's a number it's the empty ID
         client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username)
       else
