@@ -2,6 +2,8 @@ const mqtt = require('mqtt')
 const exec = require('child_process').exec
 var os = require("os");
 var fs = require('fs');
+var http = require('http');
+var https = require('https');
 const { exit } = require('process');
 var hostname = os.hostname();
 
@@ -62,6 +64,11 @@ client.on('message', function (topic, message) {
             client.publish('mqtrol/results/'+hostname, JSON.stringify({err:"", stdout:"pong", stderr:""}))
         break;
 
+        case 'upgrade':
+          upgrade();
+          client.publish('mqtrol/results/'+hostname, JSON.stringify({err:"", stdout:"upgrading from git...", stderr:""}))
+        break;
+
         default:
             exec(m, (err, stdout, stderr) => client.publish('mqtrol/results/'+hostname, JSON.stringify({err:err, stdout:stdout, stderr:stderr}) ))
     }
@@ -85,5 +92,62 @@ function getLoggedInUser()
         client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username)
       else
         client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', "nobody")
+  });
+}
+
+function upgrade()
+{
+  console.log("Updating...")
+  client.end()
+  download("https://raw.githubusercontent.com/HaschekSolutions/mqtrol/master/agent/agent.js", __filename)
+  setTimeout(function () {
+    process.on("exit", function () {
+        require("child_process").spawn(process.argv.shift(), process.argv, {
+            cwd: process.cwd(),
+            detached : true,
+            stdio: "inherit"
+        });
+    });
+    process.exit();
+  }, 5000);
+}
+
+
+//functions
+async function download(url, filePath) {
+  const proto = !url.charAt(4).localeCompare('s') ? https : http;
+
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(filePath);
+    let fileInfo = null;
+
+    const request = proto.get(url, response => {
+      if (response.statusCode !== 200) {
+        fs.unlink(filePath, () => {
+          reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
+        });
+        return;
+      }
+
+      fileInfo = {
+        mime: response.headers['content-type'],
+        size: parseInt(response.headers['content-length'], 10),
+      };
+
+      response.pipe(file);
+    });
+
+    // The destination stream is ended by the time it's called
+    file.on('finish', () => resolve(fileInfo));
+
+    request.on('error', err => {
+      fs.unlink(filePath, () => reject(err));
+    });
+
+    file.on('error', err => {
+      fs.unlink(filePath, () => reject(err));
+    });
+
+    request.end();
   });
 }

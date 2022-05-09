@@ -16,11 +16,11 @@
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="/js/helpers.js"></script>
 
-    <title>Hello, world!</title>
+    <title>MQTrol</title>
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
+    <h1>MQTrol</h1>
 
     <div class="container">
         <form>
@@ -28,6 +28,14 @@
                 <label for="cmd_input" class="form-label">Command</label>
                 <input type="text" class="form-control" id="cmd_input" aria-describedby="commandHelp">
                 <div id="commandHelp" class="form-text">Command to execute</div>
+            </div>
+
+            <div class="mb-3">
+                <h4>Quick commands</h4>
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /s /f /t 30">Shutdown</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /r /t 30">Reboot</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="choco upgrade -y">Choco upgrade all</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="upgrade">Upgrade MQtrol</button> 
             </div>
 
             <div class="mb-3" id="agentselectorwrapper">

@@ -1,9 +1,11 @@
 client  = mqtt.connect('ws://192.168.1.51:9001')
 
 var agents = []
+var agents_info = {}
 
 client.on('connect', function () {
     client.subscribe('mqtrol/presence/#')
+    client.subscribe('mqtrol/agentinfo/#')
     client.subscribe('mqtrol/results/#')
 })
 
@@ -22,7 +24,7 @@ client.on('message', function (topic, message) {
             $("#agentselectorwrapper").append(`
             <div class="form-check form-check-inline">
                 <input class="agentselectorclass customagentselector form-check-input" name="agentscmd[]" type="checkbox" id="agentselector-`+agent+`" value="`+agent+`">
-                <label class="form-check-label" for="agentselector-`+agent+`">`+agent+`</label>
+                <label id="agentselectorlabel-`+agent+`" class="form-check-label" for="agentselector-`+agent+`">`+agent+`</label>
             </div>`)
         }
         else
@@ -51,12 +53,38 @@ client.on('message', function (topic, message) {
         //$("#commands_"+agent).append("<li>"+output+"</li>")
         
     }
-  //client.end()
+
+    else if(topic.indexOf('mqtrol/agentinfo/') > -1)
+    {
+        var agent = topic.split('/')[2]
+        var setting = topic.split('/')[3]
+        var msg = message.toString()
+
+        if(!agents_info[agent])
+            agents_info[agent] = {}
+        agents_info[agent][setting] = msg
+
+        console.log("setting",setting,"for",agent,"to",msg)
+
+        if(setting=='loggedinuser')
+        {
+            $("#agentselectorlabel-"+agent).text(agent+" ("+msg+")")
+            $("agent-title-"+agent).text(agent+" ("+msg+")")
+        }
+    }
 })
 
 
 
 //button control
+$( ".quic-btn" ).on("click",function(e) {
+    var cmd = $(this).attr("cmd");
+    console.log(cmd)
+
+    $("#cmd_input").val(cmd)
+
+    e.preventDefault();
+})
 
 $( "#cmd_btn" ).on("click",function(e) {
 
@@ -94,7 +122,7 @@ function createNewBox(name,status)
     <div id="agent-`+name+`" class="col agent-box" status="`+status+`">
       <div class="card mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
-          <h4 class="my-0 fw-normal">`+name+`</h4>
+          <h4 id="agent-title-`+name+`" class="my-0 fw-normal">`+name+`</h4>
         </div>
         <div class="card-body">
           <ul id="commands_`+name+`" class="list-unstyled mt-3 mb-4"></ul>
