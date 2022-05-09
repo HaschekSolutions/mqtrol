@@ -68,8 +68,8 @@ client.on('message', function (topic, message) {
 
         if(setting=='loggedinuser')
         {
-            $("#agentselectorlabel-"+agent).text(agent+" ("+msg+")")
-            $("agent-title-"+agent).text(agent+" ("+msg+")")
+            $("#agentselectorlabel-"+agent).text(agent+(msg?" ("+msg+")":''))
+            $("#agent-title-"+agent).text(agent+(msg?" ("+msg+")":''))
         }
     }
 })

@@ -37,7 +37,7 @@ client.on('connect', function () {
       client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
 
       //start interval
-      setInterval(intervalFunc, 30000);
+      setInterval(intervalFunc, 15000);
       intervalFunc();
     }
   })
