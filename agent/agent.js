@@ -91,7 +91,7 @@ function getLoggedInUser()
       if(Number.isNaN(Number(username))) //if it's a number it's the empty ID
         client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username)
       else
-        client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', "nobody")
+        client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', "")
   });
 }
 

@@ -42,7 +42,7 @@ client.on('message', function (topic, message) {
         {
             var o = JSON.parse(output)
 
-            $("#lastoutput_"+agent).text(o.stdout)
+            $("#lastoutput_"+agent).text(o.stdout?o.stdout:" -- no output received --\n")
             if(o.err)
                 $("#lastoutput_"+agent).append("Error\n")
             if(o.stderr)

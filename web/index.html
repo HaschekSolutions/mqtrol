@@ -34,8 +34,13 @@
                 <h4>Quick commands</h4>
                 <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /s /f /t 30">Shutdown</button> 
                 <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /r /t 30">Reboot</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown -L">Logoff user</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="ping">Ping</button> 
                 <button class="quic-btn btn btn-sm btn-secondary" cmd="choco upgrade -y">Choco upgrade all</button> 
                 <button class="quic-btn btn btn-sm btn-secondary" cmd="upgrade">Upgrade MQtrol</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="wuauclt /detectnow && wuauclt /updatenow && wuauclt /detectnow /updatenow">Windows Update</button> 
+
+                
             </div>
 
             <div class="mb-3" id="agentselectorwrapper">
