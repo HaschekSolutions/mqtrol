@@ -84,6 +84,7 @@ function intervalFunc()
   getLoggedInUser()
   client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
   client.publish('mqtrol/agentinfo/'+hostname+'/networkinfo', JSON.stringify(getIPsAndMacs()),{ qos: 1, retain: true })
+  client.publish('mqtrol/agentinfo/'+hostname+'/uptime', os.uptime(),{ qos: 1, retain: true })
 }
 
 
