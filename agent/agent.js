@@ -6,7 +6,7 @@ var http = require('http');
 var https = require('https');
 const { exit } = require('process');
 var hostname = os.hostname();
-var networkinfo = JSON.stringify(os.networkInterfaces());
+var networkinfo = os.networkInterfaces();
 
 const clientId = hostname + '_' + Math.random().toString(16).substr(2, 8)
 
@@ -102,11 +102,10 @@ function getLoggedInUser()
 function getIPsAndMacs()
 {
     var o = [];
-    for(iface in os.networkInterfaces())
+    for(iface in networkinfo)
     {
         var data = networkinfo[iface]
-        //console.log(iface)
-        //console.log(data)
+
         for(var i=0;i<data.length;i++)
         {
             var d = data[i]
