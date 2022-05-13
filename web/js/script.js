@@ -123,12 +123,12 @@ $(document).on('change', 'input[type="checkbox"]', function() {
 function createNewBox(name,status)
 {
     var box = `
-    <div id="agent-`+name+`" class="col agent-box" status="`+status+`">
-      <div class="card mb-4 rounded-3 shadow-sm">
+    <div id="agent-`+name+`" class="p-2 agent-box" status="`+status+`">
+      <div class="card box mb-4 rounded-3 shadow-sm">
         <div class="card-header py-3">
           <h4 id="agent-title-`+name+`" class="my-0 fw-normal">`+name+`</h4>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="overflow:scroll">
           <ul id="commands_`+name+`" class="list-unstyled mt-3 mb-4"></ul>
 
           <pre><code id="lastoutput_`+name+`"> -- noch kein output -- </code></pre>
