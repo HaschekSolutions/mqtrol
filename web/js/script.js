@@ -1,80 +1,84 @@
-client  = mqtt.connect('ws://192.168.1.51:9001')
+$.get('/broker.txt', function(data) {
+    var broker = data;
 
-var agents = []
-var agents_info = {}
 
-client.on('connect', function () {
-    client.subscribe('mqtrol/presence/#')
-    client.subscribe('mqtrol/agentinfo/#')
-    client.subscribe('mqtrol/results/#')
-})
+    client  = mqtt.connect(broker)
 
-client.on('message', function (topic, message) {
-    if(topic.indexOf('mqtrol/presence/') > -1)
-    {
-        var agent = topic.split('/')[2]
-        var online = message.toString()=='on'?'online':'offline'
-        console.log("PRESENCE of "+agent,message.toString())
-        if(!agents.includes(agent))
+    var agents = []
+    var agents_info = {}
+
+    client.on('connect', function () {
+        client.subscribe('mqtrol/presence/#')
+        client.subscribe('mqtrol/agentinfo/#')
+        client.subscribe('mqtrol/results/#')
+    })
+
+    client.on('message', function (topic, message) {
+        if(topic.indexOf('mqtrol/presence/') > -1)
         {
-            // NEW ARRIVAL
-            createNewBox(agent,online)
-            agents.push(agent)
+            var agent = topic.split('/')[2]
+            var online = message.toString()=='on'?'online':'offline'
+            console.log("PRESENCE of "+agent,message.toString())
+            if(!agents.includes(agent))
+            {
+                // NEW ARRIVAL
+                createNewBox(agent,online)
+                agents.push(agent)
 
-            $("#agentselectorwrapper").append(`
-            <div class="form-check form-check-inline">
-                <input class="agentselectorclass customagentselector form-check-input" name="agentscmd[]" type="checkbox" id="agentselector-`+agent+`" value="`+agent+`">
-                <label id="agentselectorlabel-`+agent+`" class="form-check-label" for="agentselector-`+agent+`">`+agent+`</label>
-            </div>`)
-        }
-        else
-        {
-            $('#agent-'+agent).attr('status',online)
+                $("#agentselectorwrapper").append(`
+                <div class="form-check form-check-inline">
+                    <input class="agentselectorclass customagentselector form-check-input" name="agentscmd[]" type="checkbox" id="agentselector-`+agent+`" value="`+agent+`">
+                    <label id="agentselectorlabel-`+agent+`" class="form-check-label" for="agentselector-`+agent+`">`+agent+`</label>
+                </div>`)
+            }
+            else
+            {
+                $('#agent-'+agent).attr('status',online)
+            }
+            
         }
         
-    }
-    
-    else if(topic.indexOf('mqtrol/results/') > -1)
-    {
-        var agent = topic.split('/')[2]
-        var output = message.toString()
-        if(isJson(output))
+        else if(topic.indexOf('mqtrol/results/') > -1)
         {
-            var o = JSON.parse(output)
+            var agent = topic.split('/')[2]
+            var output = message.toString()
+            if(isJson(output))
+            {
+                var o = JSON.parse(output)
 
-            $("#lastoutput_"+agent).text(o.stdout?o.stdout:" -- no output received --\n")
-            if(o.err)
-                $("#lastoutput_"+agent).append("Error\n")
-            if(o.stderr)
-                $("#lastoutput_"+agent).append(o.stderr)
+                $("#lastoutput_"+agent).text(o.stdout?o.stdout:" -- no output received --\n")
+                if(o.err)
+                    $("#lastoutput_"+agent).append("Error\n")
+                if(o.stderr)
+                    $("#lastoutput_"+agent).append(o.stderr)
+            }
+            else
+                $("#lastoutput_"+agent).text(output)
+            //$("#commands_"+agent).append("<li>"+output+"</li>")
+            
         }
-        else
-            $("#lastoutput_"+agent).text(output)
-        //$("#commands_"+agent).append("<li>"+output+"</li>")
-        
-    }
 
-    else if(topic.indexOf('mqtrol/agentinfo/') > -1)
-    {
-        var agent = topic.split('/')[2]
-        var setting = topic.split('/')[3]
-        var msg = message.toString()
-
-        if(!agents_info[agent])
-            agents_info[agent] = {}
-        agents_info[agent][setting] = msg
-
-        console.log("setting",setting,"for",agent,"to",msg)
-
-        if(setting=='loggedinuser')
+        else if(topic.indexOf('mqtrol/agentinfo/') > -1)
         {
-            $("#agentselectorlabel-"+agent).text(agent+(msg?" ("+msg+")":''))
-            $("#agent-title-"+agent).text(agent+(msg?" ("+msg+")":''))
+            var agent = topic.split('/')[2]
+            var setting = topic.split('/')[3]
+            var msg = message.toString()
+
+            if(!agents_info[agent])
+                agents_info[agent] = {}
+            agents_info[agent][setting] = msg
+
+            console.log("setting",setting,"for",agent,"to",msg)
+
+            if(setting=='loggedinuser')
+            {
+                $("#agentselectorlabel-"+agent).text(agent+(msg?" ("+msg+")":''))
+                $("#agent-title-"+agent).text(agent+(msg?" ("+msg+")":''))
+            }
         }
-    }
-})
+    })
 
-
+}, 'text');
 
 //button control
 $( ".quic-btn" ).on("click",function(e) {
