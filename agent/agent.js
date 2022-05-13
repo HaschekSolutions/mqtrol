@@ -83,7 +83,7 @@ function intervalFunc()
 {
   getLoggedInUser()
   client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
-  client.publish('mqtrol/agentinfo/'+hostname+'/networkinfo', networkinfo,{ qos: 1, retain: true })
+  client.publish('mqtrol/agentinfo/'+hostname+'/networkinfo', JSON.stringify(getIPsAndMacs()),{ qos: 1, retain: true })
 }
 
 
@@ -96,6 +96,29 @@ function getLoggedInUser()
       else
         client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', "")
   });
+}
+
+function getIPsAndMacs()
+{
+    var o = [];
+    for(iface in os.networkInterfaces())
+    {
+        var data = networkinfo[iface]
+        //console.log(iface)
+        //console.log(data)
+        for(var i=0;i<data.length;i++)
+        {
+            var d = data[i]
+            if(d.family=="IPv4")
+            {
+                console.log(d.address,d.mac)
+                if(d.mac!='00:00:00:00:00:00' && !d.address.startsWith('127.') && !d.address.startsWith('169.') && !d.address.startsWith('172.'))
+                    o.push({ip:d.address,mac:d.mac})
+            }
+        }
+    }
+
+    return o;
 }
 
 function upgrade()
