@@ -84,7 +84,7 @@ function intervalFunc()
   getLoggedInUser()
   client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
   client.publish('mqtrol/agentinfo/'+hostname+'/networkinfo', JSON.stringify(getIPsAndMacs()),{ qos: 1, retain: true })
-  client.publish('mqtrol/agentinfo/'+hostname+'/uptime', os.uptime(),{ qos: 1, retain: true })
+  client.publish('mqtrol/agentinfo/'+hostname+'/uptime', os.uptime().toString(),{ qos: 1, retain: true })
 }
 
 
@@ -111,7 +111,6 @@ function getIPsAndMacs()
             var d = data[i]
             if(d.family=="IPv4")
             {
-                console.log(d.address,d.mac)
                 if(d.mac!='00:00:00:00:00:00' && !d.address.startsWith('127.') && !d.address.startsWith('169.') && !d.address.startsWith('172.'))
                     o.push({ip:d.address,mac:d.mac})
             }
