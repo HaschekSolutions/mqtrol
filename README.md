@@ -1,8 +1,21 @@
-# MQTrol
+<h1 align="center">MQTrol</h1
 
-Is a simple MQTT based agent/web interface solution for automating sysadmin stuff.
 
-You can manage all (Windows) clients running the agent via web interface directly over MQTT
+<div align="center">
+  
+![](https://img.shields.io/badge/nodejs-brightgreen.svg)
+![](https://img.shields.io/badge/html5-brightgreen.svg)
+[![Apache License](https://img.shields.io/badge/license-Apache-blue.svg?style=flat)](https://github.com/HaschekSolutions/mqtrol/blob/master/LICENSE)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FHaschekSolutions%2Fmqtrol&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+[![](https://img.shields.io/github/stars/HaschekSolutions/mqtrol.svg?label=Stars&style=social)](https://github.com/HaschekSolutions/mqtrol)
+
+#### Very simple `command and control` agent for Windows devices based on `MQTT` with a simple `web frontend`. Meant to be a framework rather than a complete product
+  
+</div>
+
+MQtrol can be used for automating sysadmin stuff.
+
+You can manage all (Windows) clients running the agent via web interface or directly over MQTT
 
 # Installing the Agent
 
