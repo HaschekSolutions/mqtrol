@@ -6,10 +6,12 @@ var http = require('http');
 var https = require('https');
 const { exit } = require('process');
 var hostname = os.hostname();
+var networkinfo = JSON.stringify(os.networkInterfaces());
 
 const clientId = hostname + '_' + Math.random().toString(16).substr(2, 8)
 
 console.log("Starting as "+hostname)
+
 
 const options = {
     keepalive: 30,
@@ -37,7 +39,7 @@ client.on('connect', function () {
       client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
 
       //start interval
-      setInterval(intervalFunc, 15000);
+      setInterval(intervalFunc, 30000);
       intervalFunc();
     }
   })
@@ -81,6 +83,7 @@ function intervalFunc()
 {
   getLoggedInUser()
   client.publish('mqtrol/presence/'+hostname, "on",{ qos: 1, retain: true })
+  client.publish('mqtrol/agentinfo/'+hostname+'/networkinfo', networkinfo,{ qos: 1, retain: true })
 }
 
 
