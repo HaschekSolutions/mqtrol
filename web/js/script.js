@@ -93,7 +93,8 @@ $.get('/broker.txt', function(data) {
                 break;
                 case 'networkinfo':
                     console.log("updating networkinfo",msg)
-                    $("#"+agent+"-ip").text(JSON.parse(msg)[0].ip)
+                    if(isJson(msg) && JSON.parse(msg)[0] && JSON.parse(msg)[0].ip)
+                        $("#"+agent+"-ip").text(JSON.parse(msg)[0].ip)
                 break;
 
                 case 'uptime':
