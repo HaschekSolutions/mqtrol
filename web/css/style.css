@@ -1,11 +1,9 @@
-.agent-box[status="online"] {
-    order:1;
-    filter: drop-shadow(0px 0px 10px greenyellow) ;
+.agent-onlinestatus[status="online"] {
+    color: greenyellow;
 }
 
-.agent-box[status="offline"] {
-    order:2;
-    filter: drop-shadow(0px 0px 10px red) ;
+.agent-onlinestatus[status="offline"] {
+    color:red;
 }
 
 .boxes {

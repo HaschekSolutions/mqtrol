@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <link href="//cdn.datatables.net/1.12.0/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
@@ -32,20 +33,23 @@
 
             <div class="mb-3">
                 <h4>Quick commands</h4>
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /s /f /t 30">Shutdown</button> 
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /r /t 30">Reboot</button> 
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown -L">Logoff user</button> 
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="ping">Ping</button> 
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="choco upgrade -y">Choco upgrade all</button> 
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="upgrade">Upgrade MQtrol</button> 
-                <button class="quic-btn btn btn-sm btn-secondary" cmd="wuauclt /detectnow && wuauclt /updatenow && wuauclt /detectnow /updatenow">Windows Update</button> 
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /s /f /t 30">Shutdown</button>
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown /r /t 30">Reboot</button>
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="shutdown -L">Logoff user</button>
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="ping">Ping</button>
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="choco upgrade -y">Choco upgrade all</button>
+                <button class="quic-btn btn btn-sm btn-secondary" cmd="upgrade">Upgrade MQtrol</button>
+                <button class="quic-btn btn btn-sm btn-secondary"
+                    cmd="wuauclt /detectnow && wuauclt /updatenow && wuauclt /detectnow /updatenow">Windows
+                    Update</button>
 
-                
+
             </div>
 
             <div class="mb-3" id="agentselectorwrapper">
                 <div class="form-check form-check-inline">
-                    <input class="agentselectorclass form-check-input" name="agentscmd[]" type="checkbox" checked id="agentselector" value="all">
+                    <input class="agentselectorclass form-check-input" name="agentscmd[]" type="checkbox" checked
+                        id="agentselector" value="all">
                     <label class="form-check-label" for="agentselector">All</label>
                 </div>
             </div>
@@ -61,11 +65,29 @@
         </div>
     </div>
 
+    <div class="container">
+        <table class="" id="agenttable">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Hostname</th>
+                    <th>IP</th>
+                    <th>User</th>
+                    <th>Uptime</th>
+                </tr>
+            </thead>
+            <tbody id="agenttable_body">
+                
+            </tbody>
+        </table>
+    </div>
+
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js"></script>
 
     <script src="/js/script.js"></script>
 </body>

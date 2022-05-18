@@ -1,3 +1,5 @@
+var table = $('#agenttable').DataTable();
+
 $.get('/broker.txt', function(data) {
     var broker = data;
 
@@ -22,9 +24,18 @@ $.get('/broker.txt', function(data) {
             if(!agents.includes(agent))
             {
                 // NEW ARRIVAL
-                createNewBox(agent,online)
+                //createNewBox(agent,online)
                 agents.push(agent)
 
+                table.row.add( [
+                    "<span id='"+agent+"-online' status='"+online+"' class='agent-onlinestatus'>"+online+"</span>",
+                     agent,
+                    "<span id='"+agent+"-ip'></span>",
+                    "<span id='"+agent+"-user'></span>",
+                    "<span id='"+agent+"-uptime'></span>"
+                 ] ).draw();
+
+                //checkboxes
                 $("#agentselectorwrapper").append(`
                 <div class="form-check form-check-inline">
                     <input class="agentselectorclass customagentselector form-check-input" name="agentscmd[]" type="checkbox" id="agentselector-`+agent+`" value="`+agent+`">
@@ -33,7 +44,8 @@ $.get('/broker.txt', function(data) {
             }
             else
             {
-                $('#agent-'+agent).attr('status',online)
+                $('#'+agent+"-online").attr('status',online)
+                $('#'+agent+"-online").text(online)
             }
             
         }
@@ -46,11 +58,13 @@ $.get('/broker.txt', function(data) {
             {
                 var o = JSON.parse(output)
 
+                /*
                 $("#lastoutput_"+agent).text(o.stdout?o.stdout:" -- no output received --\n")
                 if(o.err)
                     $("#lastoutput_"+agent).append("Error\n")
                 if(o.stderr)
                     $("#lastoutput_"+agent).append(o.stderr)
+                */
             }
             else
                 $("#lastoutput_"+agent).text(output)
@@ -70,10 +84,21 @@ $.get('/broker.txt', function(data) {
 
             console.log("setting",setting,"for",agent,"to",msg)
 
-            if(setting=='loggedinuser')
+            switch(setting)
             {
-                $("#agentselectorlabel-"+agent).text(agent+(msg?" ("+msg+")":''))
-                $("#agent-title-"+agent).text(agent+(msg?" ("+msg+")":''))
+                case 'loggedinuser':
+                    console.log("updating loggedinuser",agent,msg)
+                    $("#"+agent+"-user").text(msg)
+                    $("#agentselectorlabel-"+agent).text(agent+(msg?" ("+msg+")":''))
+                break;
+                case 'networkinfo':
+                    console.log("updating networkinfo",msg)
+                    $("#"+agent+"-ip").text(JSON.parse(msg)[0].ip)
+                break;
+
+                case 'uptime':
+                    $("#"+agent+"-uptime").text(msg)
+                break;
             }
         }
     })
