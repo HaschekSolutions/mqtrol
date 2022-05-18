@@ -93,9 +93,9 @@ function getLoggedInUser()
   exec('for /f "tokens=2" %u in (\'query session ^| findstr /R "console"\') do @echo %u',function (error, stdout, stderr) {
       username = stdout.trim()
       if(Number.isNaN(Number(username))) //if it's a number it's the empty ID
-        client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username)
+        client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', username,{ qos: 1, retain: true })
       else
-        client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', "")
+        client.publish('mqtrol/agentinfo/'+hostname+'/loggedinuser', "",{ qos: 1, retain: true })
   });
 }
 
