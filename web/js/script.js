@@ -32,7 +32,8 @@ $.get('/broker.txt', function(data) {
                      agent,
                     "<span id='"+agent+"-ip'></span>",
                     "<span id='"+agent+"-user'></span>",
-                    "<span id='"+agent+"-uptime'></span>"
+                    "<span id='"+agent+"-uptime'></span>",
+                    "<span id='"+agent+"-lastoutput'></span>"
                  ] ).draw();
 
                 //checkboxes
@@ -58,16 +59,14 @@ $.get('/broker.txt', function(data) {
             {
                 var o = JSON.parse(output)
 
-                /*
-                $("#lastoutput_"+agent).text(o.stdout?o.stdout:" -- no output received --\n")
+                $("#"+agent+"-lastoutput").text(o.stdout?o.stdout:" -- no output received --\n")
                 if(o.err)
-                    $("#lastoutput_"+agent).append("Error\n")
+                    $("#"+agent+"-lastoutput").append("Error\n")
                 if(o.stderr)
-                    $("#lastoutput_"+agent).append(o.stderr)
-                */
+                    $("#"+agent+"-lastoutput").append(o.stderr)
             }
             else
-                $("#lastoutput_"+agent).text(output)
+                $("#"+agent+"-lastoutput").text(output)
             //$("#commands_"+agent).append("<li>"+output+"</li>")
             
         }
