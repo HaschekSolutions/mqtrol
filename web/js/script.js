@@ -97,7 +97,9 @@ $.get('/broker.txt', function(data) {
                 break;
 
                 case 'uptime':
-                    $("#"+agent+"-uptime").text(msg)
+                    moment.locale('de');
+                    var realuptime = moment().add(msg, 'seconds').fromNow(true)
+                    $("#"+agent+"-uptime").text(realuptime)
                 break;
             }
         }
